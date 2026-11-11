@@ -1,0 +1,60 @@
+# Basis of design, Unit 100 gas compression. Fictional facility.
+# All values SI unless the key says otherwise. Pressures absolute.
+facility:
+  enterprise: Reference Energy (fictional)
+  site: Reference Gas Processing Facility
+  area: Gas Compression Area
+  unit: "100"
+  unit_name: Export Gas Compression Train
+feed_gas:
+  name: AGA8 / ISO 12213-2 "Gulf Coast" reference natural gas
+  source: >-
+    AGA Report No. 8 (1994) and ISO 12213-2 example gas "Gulf Coast", composition as
+    widely reproduced in AGA8/GERG-2008 validation literature. Verify against the
+    official tables before relying on it.
+  basis: mole_fraction
+  composition:
+    methane: 0.965222
+    nitrogen: 0.002595
+    carbon_dioxide: 0.005956
+    ethane: 0.018186
+    propane: 0.004596
+    isobutane: 0.000977
+    n_butane: 0.001007
+    isopentane: 0.000473
+    n_pentane: 0.000324
+    n_hexane: 0.000664
+  free_liquid:
+    description: >-
+      Lean gas far from dew point. Liquid at the scrubber comes from upstream carryover
+      (mist plus occasional condensate and water slugs), modelled as a boundary
+      disturbance, not as a flash.
+    design_liquid_density_kg_m3: 680.0
+    normal_liquid_rate_m3_h: 0.2
+    slug_volume_m3: 1.5
+design_case:
+  standard_flow_sm3_d: 4.0e+6
+  standard_conditions: ISO 13443 (15 degC, 101.325 kPa)
+  scrubber_inlet_pressure_pa: 30.0e+5
+  scrubber_inlet_temperature_k: 313.15
+  scrubber_pressure_drop_pa: 0.5e+5
+  suction_line_pressure_drop_pa: 0.5e+5
+  compressor_discharge_pressure_pa: 76.0e+5
+  aftercooler_pressure_drop_pa: 1.0e+5
+  export_pressure_pa: 75.0e+5
+  aftercooler_outlet_temperature_k: 333.15
+  compressor_polytropic_efficiency: 0.80
+  rated_speed_fraction: 1.05
+  scrubber_sizing_flow_factor: 1.20
+  scrubber_sizing_flow_rationale: >-
+    Scrubber sees full compressor inlet flow including anti-surge recycle. Factor covers
+    the right end of the 105 percent speed line.
+ambient:
+  design_dry_bulb_k: 323.15
+  design_rationale: Hot desert summer design case (50 degC dry bulb).
+  minimum_dry_bulb_k: 273.15
+  site_elevation_m: 200.0
+design_margins:
+  driver_power_margin: 1.10
+  driver_power_margin_source: API 617 practice, driver rated at least 110 percent of max compressor power (verify).
+  aftercooler_area_margin: 1.10

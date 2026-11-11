@@ -1,0 +1,15 @@
+# Plant layout: 3D placement (metres, x east, y north, z up, origin at unit grid 0,0,0) and
+# P&ID sheet coordinates (mm on an A1 sheet). Hand-authored: automatic P&ID layout and pipe
+# routing are out of scope (see docs/adr/0011).
+equipment:
+  100-V-101:   {pos3d: [0.0, 0.0, 0.0],   pid: [150, 300]}
+  100-K-101:   {pos3d: [15.0, 0.0, 0.0],  pid: [350, 300]}
+  100-KM-101:  {pos3d: [20.0, 0.0, 0.0],  pid: [430, 300]}
+  100-E-101:   {pos3d: [15.0, 18.0, 6.0], pid: [550, 450]}
+  100-EM-101A: {pos3d: [11.0, 16.0, 4.0], pid: [520, 520]}
+  100-EM-101B: {pos3d: [13.0, 16.0, 4.0], pid: [540, 520]}
+  100-EM-101C: {pos3d: [17.0, 16.0, 4.0], pid: [560, 520]}
+  100-EM-101D: {pos3d: [19.0, 16.0, 4.0], pid: [580, 520]}
+  100-FV-2030: {pos3d: [7.0, 10.0, 1.0],  pid: [400, 150]}
+  100-LV-1103: {pos3d: [-2.0, 2.0, 0.5],  pid: [150, 470]}
+  100-NRV-2050: {pos3d: [25.0, 18.0, 1.0], pid: [700, 450]}

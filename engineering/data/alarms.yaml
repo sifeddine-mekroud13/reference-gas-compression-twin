@@ -1,0 +1,21 @@
+# Alarm list per the ISA-18.2 lifecycle (rationalization output). See docs/alarm-philosophy.md.
+# priority: 1 = high, 2 = medium, 3 = low. Deadband in engineering units, delays in seconds.
+# trip: true marks a machine-protection action (emulated, NOT a SIS, outside IEC 61511 scope).
+alarms:
+  - {tag: 100-LT-1103, type: H, setpoint: 0.9, priority: 3, deadband: 0.05, on_delay_s: 10, consequence: "Reduced liquid hold-up margin", action: "Check LV-1103 and drain path", max_response_min: 30}
+  - {tag: 100-LT-1103, type: L, setpoint: 0.3, priority: 3, deadband: 0.05, on_delay_s: 10, consequence: "Gas blow-by to drain if level lost", action: "Check LV-1103 for passing", max_response_min: 30}
+  - {tag: 100-LT-1104, type: HH, setpoint: 1.1, priority: 1, deadband: 0.05, on_delay_s: 2, trip: true, consequence: "Liquid carryover into compressor", action: "Confirm compressor trip, investigate inlet liquids", max_response_min: 5}
+  - {tag: 100-PDT-1105, type: H, setpoint: 1.5, priority: 3, deadband: 0.1, on_delay_s: 60, consequence: "Demister fouling or flooding", action: "Check scrubber load and plan inspection", max_response_min: 60}
+  - {tag: 100-PT-2002, type: L, setpoint: 26.0, priority: 2, deadband: 0.5, on_delay_s: 5, consequence: "Throughput loss and reduced surge margin", action: "Check upstream supply and PIC-2002", max_response_min: 10}
+  - {tag: 100-TT-2005, type: H, setpoint: 145.0, priority: 2, deadband: 2.0, on_delay_s: 10, consequence: "Approaching discharge temperature limit", action: "Check recycle rate and cooler", max_response_min: 10}
+  - {tag: 100-TT-2005, type: HH, setpoint: 155.0, priority: 1, deadband: 2.0, on_delay_s: 3, trip: true, consequence: "Seal and material temperature limit", action: "Confirm trip", max_response_min: 5}
+  - {tag: 100-UY-2042, type: L, setpoint: 5.0, priority: 1, deadband: 1.0, on_delay_s: 2, consequence: "Operation near surge limit line", action: "Verify UIC-2030 in auto and recycle valve response", max_response_min: 5}
+  - {tag: 100-VT-2010X, type: H, setpoint: 50.0, priority: 2, deadband: 3.0, on_delay_s: 5, consequence: "Rising DE vibration (alert)", action: "Review spectrum and trend", max_response_min: 30}
+  - {tag: 100-VT-2010X, type: HH, setpoint: 75.0, priority: 1, deadband: 3.0, on_delay_s: 1, trip: true, consequence: "Danger level vibration", action: "Confirm trip", max_response_min: 5}
+  - {tag: 100-VT-2011X, type: H, setpoint: 50.0, priority: 2, deadband: 3.0, on_delay_s: 5, consequence: "Rising NDE vibration (alert)", action: "Review spectrum and trend", max_response_min: 30}
+  - {tag: 100-VT-2011X, type: HH, setpoint: 75.0, priority: 1, deadband: 3.0, on_delay_s: 1, trip: true, consequence: "Danger level vibration", action: "Confirm trip", max_response_min: 5}
+  - {tag: 100-TT-2013, type: H, setpoint: 105.0, priority: 2, deadband: 2.0, on_delay_s: 10, consequence: "DE bearing overheating", action: "Check lube oil supply temperature and pressure", max_response_min: 15}
+  - {tag: 100-TT-2013, type: HH, setpoint: 115.0, priority: 1, deadband: 2.0, on_delay_s: 3, trip: true, consequence: "Babbitt damage risk", action: "Confirm trip", max_response_min: 5}
+  - {tag: 100-TT-2015, type: H, setpoint: 105.0, priority: 2, deadband: 2.0, on_delay_s: 10, consequence: "Thrust bearing overload", action: "Check balance line and process conditions", max_response_min: 15}
+  - {tag: 100-TT-2104, type: H, setpoint: 140.0, priority: 2, deadband: 2.0, on_delay_s: 30, consequence: "Motor winding insulation ageing", action: "Reduce load, check motor cooling", max_response_min: 15}
+  - {tag: 100-TT-3001, type: H, setpoint: 65.0, priority: 2, deadband: 1.0, on_delay_s: 30, consequence: "Hot gas to export (pipeline coating limit)", action: "Check fan status and TIC-3001", max_response_min: 15}

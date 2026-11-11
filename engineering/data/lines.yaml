@@ -1,0 +1,17 @@
+# Line list. Endpoints: "<equipment>:<nozzle>", "BL:<name>" (battery limit) or "J:<name>" (junction).
+# Topology: cooled recycle taken downstream of the aftercooler; the discharge check valve sits
+# downstream of the recycle take-off so the recycle loop volume stays isolated from the export header.
+junctions: [J-01, J-02]
+battery_limits: [FEED, EXPORT, DRAIN]
+lines:
+  - {id: 100-L-001, service: PG, from: "BL:FEED", to: "J:J-01", dn: 400, length_m: 20}
+  - {id: 100-L-002, service: PG, from: "J:J-01", to: "100-V-101:N1", dn: 400, length_m: 10}
+  - {id: 100-L-003, service: PG, from: "100-V-101:N2", to: "100-K-101:N1", dn: 400, length_m: 25}
+  - {id: 100-L-004, service: PG, from: "100-K-101:N2", to: "100-E-101:N1", dn: 300, length_m: 30}
+  - {id: 100-L-005, service: PG, from: "100-E-101:N2", to: "J:J-02", dn: 300, length_m: 15}
+  - {id: 100-L-006, service: PG, from: "J:J-02", to: "100-NRV-2050:N1", dn: 300, length_m: 10}
+  - {id: 100-L-007, service: PG, from: "100-NRV-2050:N2", to: "BL:EXPORT", dn: 300, length_m: 20}
+  - {id: 100-L-008, service: PG, from: "J:J-02", to: "100-FV-2030:N1", dn: 200, length_m: 25}
+  - {id: 100-L-009, service: PG, from: "100-FV-2030:N2", to: "J:J-01", dn: 200, length_m: 40}
+  - {id: 100-L-010, service: HC, from: "100-V-101:N3", to: "100-LV-1103:N1", dn: 80, length_m: 5}
+  - {id: 100-L-011, service: HC, from: "100-LV-1103:N2", to: "BL:DRAIN", dn: 50, length_m: 30}

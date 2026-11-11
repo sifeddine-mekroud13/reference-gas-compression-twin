@@ -1,0 +1,107 @@
+# Equipment list and datasheets. ISO 14224 equipment class codes (verify against ISO 14224:2016 Table A.4).
+# Functional location (tag) is separate from the serialized physical item (serial).
+equipment:
+  - tag: 100-V-101
+    name: Compressor suction scrubber
+    iso14224_class: VE
+    type: vertical_two_phase_separator
+    parent: null
+    serial: RGPF-SN-0001
+    datasheet:
+      internal_diameter_m: 2.30
+      tan_tan_height_m: 6.0
+      demister: wire_mesh
+      demister_k_design_m_s: 0.107
+      design_pressure_pa: 40.0e+5
+      design_temperature_k: 358.15
+      nll_m: 0.6
+      hll_m: 0.9
+      hhll_m: 1.1
+      lll_m: 0.3
+      llll_m: 0.15
+    nozzles:
+      - {id: N1, service: gas_inlet, dn: 400}
+      - {id: N2, service: gas_outlet, dn: 400}
+      - {id: N3, service: liquid_outlet, dn: 80}
+  - tag: 100-K-101
+    name: Export gas centrifugal compressor
+    iso14224_class: CO
+    type: centrifugal_compressor_between_bearings
+    parent: null
+    serial: RGPF-SN-0002
+    datasheet:
+      impellers: 6
+      impeller_diameter_m: 0.50
+      design_speed_rpm: 9000.0
+      max_continuous_speed_rpm: 9450.0
+      min_speed_rpm: 6300.0
+      design_polytropic_efficiency: 0.80
+      bearing_type: tilting_pad_journal
+      rotor_mass_kg: 900.0
+    nozzles:
+      - {id: N1, service: suction, dn: 400}
+      - {id: N2, service: discharge, dn: 300}
+  - tag: 100-KM-101
+    name: Compressor VSD electric motor
+    iso14224_class: EM
+    type: induction_motor_vsd
+    parent: 100-K-101
+    serial: RGPF-SN-0003
+    datasheet:
+      rated_power_w: 9.0e+6
+      rated_speed_rpm: 9450.0
+      drive: variable_speed_drive_high_speed_direct
+      rotor_inertia_kg_m2: 120.0
+    nozzles: []
+  - tag: 100-E-101
+    name: Compressor aftercooler (forced-draft air cooler)
+    iso14224_class: HE
+    type: air_cooled_heat_exchanger
+    parent: null
+    serial: RGPF-SN-0004
+    datasheet:
+      bays: 2
+      fans_per_bay: 2
+      bare_tube_area_m2: 700.0
+      u_bare_design_w_m2k: 450.0
+      design_air_temperature_rise_k: 25.0
+      lmtd_correction_factor: 0.90
+      design_pressure_pa: 85.0e+5
+      design_temperature_k: 448.15
+    nozzles:
+      - {id: N1, service: gas_inlet, dn: 300}
+      - {id: N2, service: gas_outlet, dn: 300}
+  - {tag: 100-EM-101A, name: Aftercooler fan A motor, iso14224_class: EM, type: fan_motor, parent: 100-E-101, serial: RGPF-SN-0005, datasheet: {rated_power_w: 30.0e+3}, nozzles: []}
+  - {tag: 100-EM-101B, name: Aftercooler fan B motor, iso14224_class: EM, type: fan_motor, parent: 100-E-101, serial: RGPF-SN-0006, datasheet: {rated_power_w: 30.0e+3}, nozzles: []}
+  - {tag: 100-EM-101C, name: Aftercooler fan C motor, iso14224_class: EM, type: fan_motor, parent: 100-E-101, serial: RGPF-SN-0007, datasheet: {rated_power_w: 30.0e+3}, nozzles: []}
+  - {tag: 100-EM-101D, name: Aftercooler fan D motor, iso14224_class: EM, type: fan_motor, parent: 100-E-101, serial: RGPF-SN-0008, datasheet: {rated_power_w: 30.0e+3}, nozzles: []}
+  - tag: 100-FV-2030
+    name: Anti-surge recycle valve
+    iso14224_class: VA
+    type: control_valve_globe
+    parent: null
+    serial: RGPF-SN-0009
+    datasheet: {cv_max: 450.0, characteristic: linear, stroke_time_open_s: 2.0, fail_action: open}
+    nozzles:
+      - {id: N1, service: inlet, dn: 200}
+      - {id: N2, service: outlet, dn: 200}
+  - tag: 100-LV-1103
+    name: Scrubber liquid level control valve
+    iso14224_class: VA
+    type: control_valve_globe
+    parent: null
+    serial: RGPF-SN-0010
+    datasheet: {cv_max: 4.0, characteristic: equal_percentage, fail_action: closed}
+    nozzles:
+      - {id: N1, service: inlet, dn: 50}
+      - {id: N2, service: outlet, dn: 50}
+  - tag: 100-NRV-2050
+    name: Compressor discharge check valve
+    iso14224_class: VA
+    type: check_valve
+    parent: null
+    serial: RGPF-SN-0011
+    datasheet: {}
+    nozzles:
+      - {id: N1, service: inlet, dn: 300}
+      - {id: N2, service: outlet, dn: 300}

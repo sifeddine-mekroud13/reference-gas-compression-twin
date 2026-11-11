@@ -1,0 +1,58 @@
+# Tag register (CFIHOS-inspired). Numbering per docs/adr/0004.
+# class: instrument | controller | final_element | calculated
+# unit: UNECE Rec. 20 common code (as used by OPC UA EUInformation) plus symbol. Pressures absolute.
+# range: engineering range [lo, hi]; nominal: design-case value.
+tags:
+  # Scrubber 100-V-101 (loop group 11xx)
+  - {tag: 100-PT-1101, class: instrument, desc: "Scrubber pressure", equipment: 100-V-101, unit: {code: BAR, symbol: bara}, range: [0, 50], nominal: 29.5}
+  - {tag: 100-TT-1102, class: instrument, desc: "Scrubber temperature", equipment: 100-V-101, unit: {code: CEL, symbol: degC}, range: [0, 100], nominal: 40.0}
+  - {tag: 100-LT-1103, class: instrument, desc: "Scrubber liquid level (control)", equipment: 100-V-101, unit: {code: MTR, symbol: m}, range: [0, 1.5], nominal: 0.6}
+  - {tag: 100-LIC-1103, class: controller, desc: "Scrubber level controller", equipment: 100-V-101, pv: 100-LT-1103, output: 100-LV-1103, unit: {code: MTR, symbol: m}, range: [0, 1.5], nominal: 0.6}
+  - {tag: 100-LV-1103, class: final_element, desc: "Scrubber level control valve", equipment: 100-LV-1103, unit: {code: P1, symbol: "%"}, range: [0, 100], nominal: 20.0}
+  - {tag: 100-LT-1104, class: instrument, desc: "Scrubber liquid level (protection, independent)", equipment: 100-V-101, unit: {code: MTR, symbol: m}, range: [0, 1.5], nominal: 0.6}
+  - {tag: 100-PDT-1105, class: instrument, desc: "Scrubber demister differential pressure", equipment: 100-V-101, unit: {code: KPA, symbol: kPa}, range: [0, 5], nominal: 0.4}
+  - {tag: 100-UY-1140, class: calculated, desc: "Scrubber Souders-Brown load factor", equipment: 100-V-101, unit: {code: MTS, symbol: m/s}, range: [0, 0.2], nominal: 0.07}
+  # Compressor 100-K-101 (loop group 20xx)
+  - {tag: 100-FT-2001, class: instrument, desc: "Compressor suction flow element differential pressure (anti-surge)", equipment: 100-K-101, line: 100-L-003, unit: {code: KPA, symbol: kPa}, range: [0, 50], nominal: 25.0}
+  - {tag: 100-FY-2001, class: calculated, desc: "Compressor suction mass flow (compensated)", equipment: 100-K-101, unit: {code: KGS, symbol: kg/s}, range: [0, 50], nominal: 33.0}
+  - {tag: 100-PT-2002, class: instrument, desc: "Compressor suction pressure", equipment: 100-K-101, line: 100-L-003, unit: {code: BAR, symbol: bara}, range: [0, 50], nominal: 29.0}
+  - {tag: 100-PIC-2002, class: controller, desc: "Suction pressure controller (cascade to speed)", equipment: 100-K-101, pv: 100-PT-2002, output: 100-SIC-2101, unit: {code: BAR, symbol: bara}, range: [0, 50], nominal: 29.0}
+  - {tag: 100-TT-2003, class: instrument, desc: "Compressor suction temperature", equipment: 100-K-101, line: 100-L-003, unit: {code: CEL, symbol: degC}, range: [0, 100], nominal: 40.0}
+  - {tag: 100-PT-2004, class: instrument, desc: "Compressor discharge pressure", equipment: 100-K-101, line: 100-L-004, unit: {code: BAR, symbol: bara}, range: [0, 100], nominal: 76.0}
+  - {tag: 100-TT-2005, class: instrument, desc: "Compressor discharge temperature", equipment: 100-K-101, line: 100-L-004, unit: {code: CEL, symbol: degC}, range: [0, 200], nominal: 134.0}
+  - {tag: 100-VT-2010X, class: instrument, desc: "Drive-end journal radial vibration X", equipment: 100-K-101, unit: {code: 4H, symbol: um pk-pk}, range: [0, 125], nominal: 15.0}
+  - {tag: 100-VT-2010Y, class: instrument, desc: "Drive-end journal radial vibration Y", equipment: 100-K-101, unit: {code: 4H, symbol: um pk-pk}, range: [0, 125], nominal: 15.0}
+  - {tag: 100-VT-2011X, class: instrument, desc: "Non-drive-end journal radial vibration X", equipment: 100-K-101, unit: {code: 4H, symbol: um pk-pk}, range: [0, 125], nominal: 12.0}
+  - {tag: 100-VT-2011Y, class: instrument, desc: "Non-drive-end journal radial vibration Y", equipment: 100-K-101, unit: {code: 4H, symbol: um pk-pk}, range: [0, 125], nominal: 12.0}
+  - {tag: 100-ZT-2012, class: instrument, desc: "Rotor axial position", equipment: 100-K-101, unit: {code: MMT, symbol: mm}, range: [-1, 1], nominal: 0.0}
+  - {tag: 100-TT-2013, class: instrument, desc: "Drive-end journal bearing pad temperature", equipment: 100-K-101, unit: {code: CEL, symbol: degC}, range: [0, 150], nominal: 85.0}
+  - {tag: 100-TT-2014, class: instrument, desc: "Non-drive-end journal bearing pad temperature", equipment: 100-K-101, unit: {code: CEL, symbol: degC}, range: [0, 150], nominal: 82.0}
+  - {tag: 100-TT-2015, class: instrument, desc: "Thrust bearing active pad temperature", equipment: 100-K-101, unit: {code: CEL, symbol: degC}, range: [0, 150], nominal: 88.0}
+  - {tag: 100-ST-2020, class: instrument, desc: "Compressor shaft speed", equipment: 100-K-101, unit: {code: RPM, symbol: rpm}, range: [0, 12000], nominal: 9000.0}
+  - {tag: 100-UIC-2030, class: controller, desc: "Anti-surge controller", equipment: 100-K-101, pv: 100-FT-2001, output: 100-FV-2030, unit: {code: P1, symbol: "%"}, range: [0, 100], nominal: 0.0}
+  - {tag: 100-FV-2030, class: final_element, desc: "Anti-surge recycle valve", equipment: 100-FV-2030, unit: {code: P1, symbol: "%"}, range: [0, 100], nominal: 0.0}
+  - {tag: 100-ZT-2031, class: instrument, desc: "Anti-surge valve position feedback", equipment: 100-FV-2030, unit: {code: P1, symbol: "%"}, range: [0, 100], nominal: 0.0}
+  - {tag: 100-UY-2040, class: calculated, desc: "Polytropic efficiency (Schultz)", equipment: 100-K-101, unit: {code: P1, symbol: "%"}, range: [0, 100], nominal: 80.0}
+  - {tag: 100-UY-2041, class: calculated, desc: "Polytropic head", equipment: 100-K-101, unit: {code: B54, symbol: kJ/kg}, range: [0, 250], nominal: 164.7}
+  - {tag: 100-UY-2042, class: calculated, desc: "Surge margin (flow based, invariant coordinates)", equipment: 100-K-101, unit: {code: P1, symbol: "%"}, range: [-50, 100], nominal: 45.0}
+  # Motor 100-KM-101 (loop group 21xx)
+  - {tag: 100-SIC-2101, class: controller, desc: "VSD speed controller", equipment: 100-KM-101, pv: 100-ST-2020, output: null, unit: {code: RPM, symbol: rpm}, range: [0, 12000], nominal: 9000.0}
+  - {tag: 100-JT-2102, class: instrument, desc: "Motor active power", equipment: 100-KM-101, unit: {code: MAW, symbol: MW}, range: [0, 12], nominal: 7.0}
+  - {tag: 100-IT-2103, class: instrument, desc: "Motor current", equipment: 100-KM-101, unit: {code: AMP, symbol: A}, range: [0, 800], nominal: 420.0}
+  - {tag: 100-TT-2104, class: instrument, desc: "Motor stator winding temperature", equipment: 100-KM-101, unit: {code: CEL, symbol: degC}, range: [0, 180], nominal: 100.0}
+  # Aftercooler 100-E-101 (loop group 30xx)
+  - {tag: 100-TT-3001, class: instrument, desc: "Aftercooler gas outlet temperature", equipment: 100-E-101, line: 100-L-005, unit: {code: CEL, symbol: degC}, range: [0, 150], nominal: 60.0}
+  - {tag: 100-TIC-3001, class: controller, desc: "Aftercooler outlet temperature controller (fan staging)", equipment: 100-E-101, pv: 100-TT-3001, output: null, unit: {code: CEL, symbol: degC}, range: [0, 150], nominal: 60.0}
+  - {tag: 100-PT-3002, class: instrument, desc: "Aftercooler gas outlet pressure", equipment: 100-E-101, line: 100-L-005, unit: {code: BAR, symbol: bara}, range: [0, 100], nominal: 75.0}
+  - {tag: 100-TT-3003, class: instrument, desc: "Ambient air temperature at cooler inlet", equipment: 100-E-101, unit: {code: CEL, symbol: degC}, range: [-10, 60], nominal: 50.0}
+  - {tag: 100-IT-3010A, class: instrument, desc: "Fan A motor current", equipment: 100-EM-101A, unit: {code: AMP, symbol: A}, range: [0, 100], nominal: 70.0}
+  - {tag: 100-IT-3010B, class: instrument, desc: "Fan B motor current", equipment: 100-EM-101B, unit: {code: AMP, symbol: A}, range: [0, 100], nominal: 70.0}
+  - {tag: 100-IT-3010C, class: instrument, desc: "Fan C motor current", equipment: 100-EM-101C, unit: {code: AMP, symbol: A}, range: [0, 100], nominal: 70.0}
+  - {tag: 100-IT-3010D, class: instrument, desc: "Fan D motor current", equipment: 100-EM-101D, unit: {code: AMP, symbol: A}, range: [0, 100], nominal: 70.0}
+  - {tag: 100-UY-3040, class: calculated, desc: "Aftercooler approach temperature", equipment: 100-E-101, unit: {code: KEL, symbol: K}, range: [0, 50], nominal: 10.0}
+  - {tag: 100-UY-3041, class: calculated, desc: "Aftercooler gas-side duty", equipment: 100-E-101, unit: {code: MAW, symbol: MW}, range: [0, 15], nominal: 6.5}
+  # Export (loop group 40xx), line-mounted
+  - {tag: 100-FT-4001, class: instrument, desc: "Export gas flow (ultrasonic meter, flow computer mass output)", equipment: null, line: 100-L-007, unit: {code: KGS, symbol: kg/s}, range: [0, 50], nominal: 33.0}
+  - {tag: 100-AT-4002, class: instrument, desc: "Export gas methane content (online GC)", equipment: null, line: 100-L-007, unit: {code: P1, symbol: mol%}, range: [80, 100], nominal: 96.5}
+  - {tag: 100-AT-4003, class: instrument, desc: "Export gas molar mass (online GC)", equipment: null, line: 100-L-007, unit: {code: A94, symbol: g/mol}, range: [15, 25], nominal: 16.8}
+  - {tag: 100-PT-4004, class: instrument, desc: "Export header pressure", equipment: null, line: 100-L-007, unit: {code: BAR, symbol: bara}, range: [0, 100], nominal: 75.0}
