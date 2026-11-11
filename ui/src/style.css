@@ -1,0 +1,33 @@
+/* ISA-101 inspired: neutral greys, colour reserved for abnormal states and selection. */
+:root { --bg: #e4e4e4; --panel: #f0f0f0; --ink: #222; --muted: #666; --line: #bdbdbd;
+  --p1: #c62828; --p2: #d08a00; --p3: #8a6d00; --sel: #3b6fb6; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.4 Arial, Helvetica, sans-serif; }
+header { padding: 8px 16px; background: #d0d0d0; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+header .right { margin-left: auto; }
+main { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 10px; padding: 10px 16px; }
+.panel { background: var(--panel); border: 1px solid var(--line); padding: 8px 10px; overflow: auto; max-height: 560px; }
+.panel.wide { grid-column: span 2; }
+@media (max-width: 820px) { .panel.wide { grid-column: span 1; } }
+h2 { font-size: 13px; margin: 0 0 6px; color: #333; text-transform: uppercase; letter-spacing: .03em; }
+h3 { font-size: 12px; margin: 8px 0 2px; }
+table { border-collapse: collapse; width: 100%; }
+td, th { border-bottom: 1px solid #ddd; padding: 2px 4px; text-align: left; vertical-align: top; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.abn { background: #fff3cd; }
+.alarm1, tr.p1 td:first-child { background: var(--p1); color: #fff; padding: 2px 6px; }
+tr.p2 td:first-child { background: var(--p2); color: #fff; }
+tr.p3 td:first-child { background: var(--p3); color: #fff; }
+.scene { height: 420px; }
+.pid svg { width: 100%; height: auto; }
+.pid .sel .eq, .pid .sel circle { stroke: var(--sel); stroke-width: 3; }
+.bar { position: relative; height: 8px; width: 90px; background: #d6d6d6; }
+.bar .normal { position: absolute; top: 0; bottom: 0; background: #bcbcbc; }
+.bar .pv { position: absolute; top: -2px; width: 3px; height: 12px; background: #222; }
+.chart { width: 100%; background: #fafafa; border: 1px solid #ddd; margin-top: 6px; }
+.chart .axis { stroke: #888; } .chart .ax { font-size: 9px; fill: #555; }
+.chart .speed { fill: none; stroke: #777; } .chart .surge { fill: none; stroke: var(--p1); stroke-dasharray: 4 3; }
+.chart .op { fill: var(--sel); } .chart .trend { fill: none; stroke: #333; stroke-width: 1.2; }
+.form label { display: inline-block; margin: 2px 8px 2px 0; } .form input[type=number] { width: 70px; }
+button { background: #d6d6d6; border: 1px solid #999; padding: 3px 8px; cursor: pointer; }

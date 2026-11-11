@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgpf/equipment.schema.json",
+  "title": "equipment",
+  "type": "object",
+  "required": [
+    "equipment"
+  ],
+  "properties": {
+    "equipment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "tag",
+          "name",
+          "iso14224_class",
+          "type",
+          "parent",
+          "serial",
+          "datasheet",
+          "nozzles"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "tag": {
+            "type": "string",
+            "pattern": "^100-[A-Z]{1,4}-[0-9]{3,4}[A-Z]?$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "iso14224_class": {
+            "enum": [
+              "VE",
+              "CO",
+              "EM",
+              "HE",
+              "VA",
+              "PU",
+              "FA"
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "parent": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "serial": {
+            "type": "string"
+          },
+          "datasheet": {
+            "type": "object",
+            "patternProperties": {
+              "_(m|w|pa|k|rpm|kg|kg_m2|m2|w_m2k|m_s|s)$": {
+                "type": "number"
+              },
+              "^(impellers|bays|fans_per_bay|cv_max)$": {
+                "type": "number"
+              }
+            }
+          },
+          "nozzles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "service",
+                "dn"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^N[0-9]+$"
+                },
+                "service": {
+                  "type": "string"
+                },
+                "dn": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+seed: 3
+events:
+  - {t: 60, action: slug, volume_m3: 1.5, duration_s: 60}
+  - {t: 300, action: lv_stuck, position: 0.0}
+  - {t: 320, action: slug, volume_m3: 3.0, duration_s: 60}

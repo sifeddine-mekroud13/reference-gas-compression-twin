@@ -1,0 +1,16 @@
+# Diode receiver (DMZ side). Accept only the UDP stream from the transmitter; send nothing
+# back into the DMZ (no ACK, no ICMP), so no return path to Level 3 exists.
+# Never 'flush ruleset': it would delete Docker's embedded-DNS NAT rules in this netns.
+table inet diode
+delete table inet diode
+table inet diode {
+  chain input {
+    type filter hook input priority 0; policy accept;
+    ip saddr 10.10.35.10 udp dport 5005 counter accept
+    ip saddr 10.10.35.0/24 counter drop
+  }
+  chain output {
+    type filter hook output priority 0; policy accept;
+    ip daddr 10.10.35.0/24 counter drop
+  }
+}

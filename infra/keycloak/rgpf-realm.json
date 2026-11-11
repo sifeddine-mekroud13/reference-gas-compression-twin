@@ -1,0 +1,44 @@
+{
+  "realm": "rgpf",
+  "enabled": true,
+  "sslRequired": "external",
+  "accessTokenLifespan": 900,
+  "bruteForceProtected": true,
+  "roles": {
+    "realm": [
+      {"name": "operator", "description": "Control room operator: live values, alarms, advisories"},
+      {"name": "process_engineer", "description": "Process engineer: KPIs, history, what-if"},
+      {"name": "maintenance", "description": "Maintenance and reliability: degradation, work orders, history"},
+      {"name": "admin", "description": "Platform administrator: everything plus audit log"}
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "rgpf-ui",
+      "name": "RGPF engineering UI",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://localhost:8081/*"],
+      "webOrigins": ["http://localhost:8081"],
+      "attributes": {"pkce.code.challenge.method": "S256", "post.logout.redirect.uris": "http://localhost:8081/*"}
+    },
+    {
+      "clientId": "rgpf-test",
+      "name": "Automated test client (direct grant, test users only)",
+      "publicClient": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true
+    }
+  ],
+  "users": [
+    {"username": "operator1", "enabled": true, "email": "operator1@example.invalid", "firstName": "Op", "lastName": "One",
+     "credentials": [{"type": "password", "value": "${RGPF_DEMO_PASSWORD}", "temporary": false}], "realmRoles": ["operator"]},
+    {"username": "engineer1", "enabled": true, "email": "engineer1@example.invalid", "firstName": "Eng", "lastName": "One",
+     "credentials": [{"type": "password", "value": "${RGPF_DEMO_PASSWORD}", "temporary": false}], "realmRoles": ["process_engineer"]},
+    {"username": "maint1", "enabled": true, "email": "maint1@example.invalid", "firstName": "Maint", "lastName": "One",
+     "credentials": [{"type": "password", "value": "${RGPF_DEMO_PASSWORD}", "temporary": false}], "realmRoles": ["maintenance"]},
+    {"username": "admin1", "enabled": true, "email": "admin1@example.invalid", "firstName": "Admin", "lastName": "One",
+     "credentials": [{"type": "password", "value": "${RGPF_DEMO_PASSWORD}", "temporary": false}], "realmRoles": ["admin"]}
+  ]
+}

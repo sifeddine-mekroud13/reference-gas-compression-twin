@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgpf/tags.schema.json",
+  "title": "tags",
+  "type": "object",
+  "required": [
+    "tags"
+  ],
+  "properties": {
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "tag",
+          "class",
+          "desc",
+          "equipment",
+          "unit",
+          "range",
+          "nominal"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "tag": {
+            "type": "string",
+            "pattern": "^100-[A-Z]{2,4}-[0-9]{4}[A-Z]?$"
+          },
+          "class": {
+            "enum": [
+              "instrument",
+              "controller",
+              "final_element",
+              "calculated"
+            ]
+          },
+          "desc": {
+            "type": "string",
+            "minLength": 3
+          },
+          "equipment": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "line": {
+            "type": "string"
+          },
+          "pv": {
+            "type": "string"
+          },
+          "output": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": "object",
+            "required": [
+              "code",
+              "symbol"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "symbol": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "range": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "nominal": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

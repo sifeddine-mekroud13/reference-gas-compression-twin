@@ -1,0 +1,155 @@
+# Unit 100 reference stack. One Docker network per zone (IEC 62443 zones, Purdue levels).
+# Only Level 4 publishes ports to the host. See docs/security/zones-and-conduits.md.
+name: rgpf
+
+x-py: &py
+  build: {context: ., dockerfile: infra/docker/python.Dockerfile}
+  image: rgpf/python:0.1.0
+  restart: unless-stopped
+  volumes: ["pki:/pki:ro"]
+  environment: &pyenv
+    RGPF_HISTORIAN_DSN: postgresql://rgpf:${POSTGRES_PASSWORD:?set in .env}@historian:5432/historian
+    RGPF_CMMS_DSN: postgresql://rgpf:${POSTGRES_PASSWORD:?set in .env}@historian:5432/cmms
+    RGPF_REPLICA_DSN: postgresql://rgpf:${REPLICA_PASSWORD:?set in .env}@replica:5432/replica
+    RGPF_OPCUA_URL: opc.tcp://opcua:4840/rgpf/
+
+services:
+  pki-init:
+    <<: *py
+    restart: "no"
+    user: root
+    volumes: ["pki:/pki"]
+    network_mode: none
+    command: ["sh", "-c", "test -f /pki/opcua-server.der || python /app/infra/pki/make_certs.py /pki"]
+
+  # ---------------- Level 1/2: emulated DCS (simulator + control + OPC UA server)
+  opcua:
+    <<: *py
+    command: ["python", "-m", "svc_opcua.server"]
+    environment:
+      <<: *pyenv
+      RGPF_SPEEDUP: ${RGPF_SPEEDUP:-1}
+      RGPF_SCENARIO: ${RGPF_SCENARIO:-}
+    networks: {l2: {ipv4_address: 10.10.2.10}}
+    depends_on: {pki-init: {condition: service_completed_successfully}}
+
+  # ---------------- Level 3: site operations
+  historian:
+    image: timescale/timescaledb:2.17.2-pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rgpf
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      POSTGRES_DB: historian
+    volumes: ["historian:/var/lib/postgresql/data", "./infra/historian:/docker-entrypoint-initdb.d:ro"]
+    networks: {l3: {ipv4_address: 10.10.3.10}}
+    healthcheck: {test: ["CMD", "pg_isready", "-U", "rgpf", "-d", "historian"], interval: 5s, retries: 20}
+
+  cmms-seed:
+    <<: *py
+    restart: "no"
+    command: ["python", "-m", "svc_cmms.seed"]
+    networks: {l3: {}}
+    depends_on: {historian: {condition: service_healthy}}
+
+  collector:
+    <<: *py
+    user: root
+    cap_add: [NET_ADMIN]
+    entrypoint: ["/app/infra/firewall/entry.sh", "/app/infra/firewall/conduit-l3-l2.nft"]
+    command: ["python", "-m", "svc_collector.main"]
+    volumes: ["pki:/pki:ro", "collector-buffer:/data/collector"]
+    networks: {l2: {}, l3: {}}
+    depends_on: {historian: {condition: service_healthy}, opcua: {condition: service_started}}
+
+  twin:
+    <<: *py
+    user: root
+    cap_add: [NET_ADMIN]
+    entrypoint: ["/app/infra/firewall/entry.sh", "/app/infra/firewall/conduit-l3-l2.nft"]
+    command: ["python", "-m", "svc_twin.main"]
+    environment:
+      <<: *pyenv
+      RGPF_TWIN_PERIOD_S: ${RGPF_TWIN_PERIOD_S:-30}
+    networks: {l2: {}, l3: {}}
+    depends_on: {historian: {condition: service_healthy}}
+
+  # ---------------- Level 3.5: DMZ (data diode emulation)
+  diode-tx:
+    <<: *py
+    user: root
+    cap_add: [NET_ADMIN]
+    entrypoint: ["/app/infra/firewall/entry.sh", "/app/infra/firewall/diode-tx.nft"]
+    command: ["python", "-m", "svc_diode.tx"]
+    networks: {l3: {}, dmz: {ipv4_address: 10.10.35.10}}
+    depends_on: {historian: {condition: service_healthy}}
+
+  diode-rx:
+    <<: *py
+    user: root
+    cap_add: [NET_ADMIN]
+    entrypoint: ["/app/infra/firewall/entry.sh", "/app/infra/firewall/diode-rx.nft"]
+    command: ["python", "-m", "svc_diode.rx"]
+    networks: {dmz: {ipv4_address: 10.10.35.20}, l4: {}}
+    depends_on: {replica: {condition: service_healthy}}
+
+  # ---------------- Level 4: engineering platform (read-only towards the plant)
+  replica:
+    image: postgres:16.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rgpf
+      POSTGRES_PASSWORD: ${REPLICA_PASSWORD:?set in .env}
+      POSTGRES_DB: replica
+    volumes: ["replica:/var/lib/postgresql/data", "./infra/replica:/docker-entrypoint-initdb.d:ro"]
+    networks: {l4: {}}
+    healthcheck: {test: ["CMD", "pg_isready", "-U", "rgpf", "-d", "replica"], interval: 5s, retries: 20}
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    restart: unless-stopped
+    # start-dev: HTTP, in-memory-ish H2 store. Demo only; production needs TLS, a real DB and `start`.
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?set in .env}
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      RGPF_DEMO_PASSWORD: ${RGPF_DEMO_PASSWORD:?set in .env}
+      JAVA_OPTS_KC_HEAP: "-Xms128m -Xmx384m"
+    volumes: ["./infra/keycloak:/opt/keycloak/data/import:ro"]
+    ports: ["127.0.0.1:8080:8080"]
+    networks: {l4: {}}
+
+  api:
+    <<: *py
+    command: ["uvicorn", "svc_api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      <<: *pyenv
+      RGPF_OIDC_JWKS: http://keycloak:8080/realms/rgpf/protocol/openid-connect/certs
+      RGPF_OIDC_ISSUER: http://localhost:8080/realms/rgpf
+      RGPF_CORS: http://localhost:8081
+      # rgpf-test (password grant) is for automated tests only; leave it out of any shared deployment.
+      RGPF_OIDC_CLIENTS: ${RGPF_OIDC_CLIENTS:-rgpf-ui}
+    networks: {l4: {}}
+    depends_on: {replica: {condition: service_healthy}}
+
+  ui:
+    build: {context: ui}
+    image: rgpf/ui:0.1.0
+    restart: unless-stopped
+    ports: ["127.0.0.1:8081:80"]
+    networks: {l4: {}}
+    depends_on: [api]
+
+networks:
+  l2: {internal: true, ipam: {config: [{subnet: 10.10.2.0/24}]}}
+  l3: {internal: true, ipam: {config: [{subnet: 10.10.3.0/24}]}}
+  dmz: {internal: true, ipam: {config: [{subnet: 10.10.35.0/24}]}}
+  l4: {ipam: {config: [{subnet: 10.10.4.0/24}]}}
+
+volumes:
+  pki: {}
+  historian: {}
+  replica: {}
+  collector-buffer: {}

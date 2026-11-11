@@ -1,0 +1,11 @@
+.venv
+.git
+**/__pycache__
+**/.mypy_cache
+**/.ruff_cache
+**/.pytest_cache
+infra/pki/out
+ui/node_modules
+ui/dist
+datasets
+data

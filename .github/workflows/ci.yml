@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check . && uv run ruff format --check .
+      - name: Type check
+        run: uv run mypy libs services/src analytics/src
+      - name: Unit tests
+        run: uv run pytest
+      - name: Engineering dataset consistency
+        run: uv run engdata check
+      - name: Sizing verification and doc freshness
+        run: uv run engdata sizing --check
+
+  secrets:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ui:
+    runs-on: ubuntu-24.04
+    defaults: {run: {working-directory: ui}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "20", cache: npm, cache-dependency-path: ui/package-lock.json}
+      - run: npm ci
+      - run: npm run build
+
+  compose-smoke:
+    runs-on: ubuntu-24.04
+    needs: [python]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked
+      - name: Throwaway secrets for CI
+        run: |
+          for k in POSTGRES_PASSWORD REPLICA_PASSWORD KEYCLOAK_ADMIN_PASSWORD RGPF_DEMO_PASSWORD; do
+            echo "$k=$(openssl rand -hex 16)"; done > .env
+          echo "RGPF_SPEEDUP=10" >> .env
+      - run: docker compose up -d --build --wait --wait-timeout 600 historian replica opcua collector twin diode-tx diode-rx api keycloak ui
+      - name: Zone and resilience tests
+        run: RGPF_STACK=1 uv run pytest tests/stack -v
+      - if: failure()
+        run: docker compose logs --tail 200

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgpf/basis_of_design.schema.json",
+  "title": "basis_of_design",
+  "type": "object",
+  "required": [
+    "facility",
+    "feed_gas",
+    "design_case",
+    "ambient",
+    "design_margins"
+  ],
+  "properties": {
+    "feed_gas": {
+      "type": "object",
+      "required": [
+        "name",
+        "source",
+        "basis",
+        "composition"
+      ],
+      "properties": {
+        "basis": {
+          "const": "mole_fraction"
+        },
+        "composition": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "design_case": {
+      "type": "object",
+      "patternProperties": {
+        "(_pa|_k|_sm3_d|_efficiency|_fraction|_factor)$": {
+          "type": "number"
+        }
+      }
+    },
+    "ambient": {
+      "type": "object",
+      "patternProperties": {
+        "(_k|_m)$": {
+          "type": "number"
+        }
+      }
+    },
+    "design_margins": {
+      "type": "object",
+      "patternProperties": {
+        "_margin$": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+      - id: detect-private-key
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks-docker
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (strict, libs)
+        entry: uv run mypy libs services/src
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: engdata-check
+        name: engineering dataset consistency
+        entry: uv run engdata check
+        language: system
+        pass_filenames: false
+        files: ^engineering/
+      - id: sizing-doc-fresh
+        name: sizing doc up to date
+        entry: uv run engdata sizing --check
+        language: system
+        pass_filenames: false
+        files: ^(engineering/|libs/)

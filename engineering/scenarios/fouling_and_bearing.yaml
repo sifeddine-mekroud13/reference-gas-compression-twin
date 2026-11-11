@@ -1,0 +1,7 @@
+# Accelerated degradation for training data and twin tests (time-compressed: weeks into hours).
+seed: 1
+rates: {head_per_h: 0.004, eff_per_h: 0.003, bearing_per_h: 0.02}
+events:
+  - {t: 1800, action: sensor_fault, tag: 100-TT-2005, drift_per_s: 0.0002}
+  - {t: 5400, action: fan_fail, fan: 3}
+  - {t: 9000, action: wash, recovery: 0.8}

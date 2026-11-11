@@ -1,0 +1,40 @@
+# Public benchmark datasets. Never committed: fetched into analytics/benchmarks/data (gitignored).
+# sha256 = "" means not yet pinned: the first download records the hash in datasets.lock and
+# later downloads must match it (trust on first use). Pin by copying the hash here after a
+# manual check against the publisher.
+
+[tep_rieth2017]
+title = "Additional Tennessee Eastman Process Simulation Data (Rieth et al. 2017)"
+licence = "CC0 (Harvard Dataverse)"
+doi = "10.7910/DVN/6C3JR1"
+url = "https://dataverse.harvard.edu/api/access/dataset/:persistentId/?persistentId=doi:10.7910/DVN/6C3JR1"
+file = "tep_rieth2017.zip"
+sha256 = ""
+
+[cwru_12k_de]
+title = "CWRU Bearing Data Center, 12k drive end, normal + 0.007 in faults"
+licence = "Free for research, cite Case Western Reserve University Bearing Data Center"
+url = "https://engineering.case.edu/sites/default/files/97.mat"
+file = "cwru_97_normal.mat"
+sha256 = ""
+
+[cwru_ir007]
+title = "CWRU inner race 0.007 in, 0 hp"
+licence = "as above"
+url = "https://engineering.case.edu/sites/default/files/105.mat"
+file = "cwru_105_ir007.mat"
+sha256 = ""
+
+[paderborn_k001]
+title = "Paderborn University KAt bearing data, healthy K001"
+licence = "CC BY-NC 4.0, cite Lessmeier et al. (2016)"
+url = "https://groups.uni-paderborn.de/kat/BearingDataCenter/K001.rar"
+file = "paderborn_K001.rar"
+sha256 = ""
+
+[uci_naval]
+title = "UCI Condition Based Maintenance of Naval Propulsion Plants (Coraddu et al. 2014)"
+licence = "CC BY 4.0"
+url = "https://archive.ics.uci.edu/static/public/316/condition+based+maintenance+of+naval+propulsion+plants.zip"
+file = "uci_naval.zip"
+sha256 = ""

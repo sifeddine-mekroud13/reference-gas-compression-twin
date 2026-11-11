@@ -1,0 +1,18 @@
+# Conduit C1 (L3 client -> L2 OPC UA server). On the L2 subnet only OPC UA (TCP 4840) to the
+# DCS server may be initiated; nothing may be initiated from L2 towards this L3 host.
+# Never 'flush ruleset': it would delete Docker's embedded-DNS NAT rules in this netns.
+table inet conduit
+delete table inet conduit
+table inet conduit {
+  chain input {
+    type filter hook input priority 0; policy accept;
+    ip saddr 10.10.2.0/24 ct state established,related accept
+    ip saddr 10.10.2.0/24 counter drop
+  }
+  chain output {
+    type filter hook output priority 0; policy accept;
+    ip daddr 10.10.2.10 tcp dport 4840 accept
+    ip daddr 10.10.2.0/24 ct state established,related accept
+    ip daddr 10.10.2.0/24 counter drop
+  }
+}

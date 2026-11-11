@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgpf/layout.schema.json",
+  "title": "layout",
+  "type": "object",
+  "required": [
+    "equipment"
+  ],
+  "properties": {
+    "equipment": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "pos3d",
+          "pid"
+        ],
+        "properties": {
+          "pos3d": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "pid": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

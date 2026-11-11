@@ -1,0 +1,60 @@
+[project]
+name = "rgpf-twin"
+version = "0.1.0"
+description = "Open reference implementation of a gas compression stage digital twin (simulated plant)"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = ["engdata", "thermo-ref", "machinery", "plant", "twincore", "rgpf-services"]
+
+[tool.uv.workspace]
+members = ["libs/*", "services", "analytics"]
+
+[tool.uv.sources]
+engdata = { workspace = true }
+thermo-ref = { workspace = true }
+machinery = { workspace = true }
+plant = { workspace = true }
+rgpf-services = { workspace = true }
+twincore = { workspace = true }
+rgpf-analytics = { workspace = true }
+
+[dependency-groups]
+dev = ["rgpf-analytics", "pytest>=8", "ruff>=0.6", "mypy>=1.11", "pre-commit>=3.8", "types-PyYAML"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF"]
+ignore = ["SIM108"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["analytics", "engdata", "machinery", "plant", "thermo_ref", "twincore", "svc_api", "svc_cmms", "svc_collector", "svc_common", "svc_diode", "svc_opcua", "svc_twin"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "svc_api.auth.require"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+mypy_path = ["libs/engdata/src", "libs/thermo/src", "libs/machinery/src", "libs/plant/src", "services/src", "libs/twincore/src", "analytics/src"]
+
+[[tool.mypy.overrides]]
+# asyncua uses NewType wrappers (Int16, String, DateTime) that make every NodeId call an
+# arg-type error; services are checked with that noise disabled, libs stay fully strict.
+module = ["svc_opcua.*", "svc_collector.*", "svc_twin.*"]
+disable_error_code = ["arg-type", "attr-defined"]
+
+[tool.pytest.ini_options]
+testpaths = ["libs", "services/tests", "analytics/tests", "tests"]
+addopts = "-q"
+
+[tool.ruff.lint.per-file-ignores]
+"libs/engdata/src/engdata/sizing.py" = ["E501"]  # markdown report template
+
+[[tool.mypy.overrides]]
+# numpy/sklearn return Any for most array ops; analytics keeps strict otherwise.
+module = ["analytics.*"]
+warn_return_any = false

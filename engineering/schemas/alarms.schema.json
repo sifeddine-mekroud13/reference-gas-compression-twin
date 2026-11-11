@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgpf/alarms.schema.json",
+  "title": "alarms",
+  "type": "object",
+  "required": [
+    "alarms"
+  ],
+  "properties": {
+    "alarms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "tag",
+          "type",
+          "setpoint",
+          "priority",
+          "deadband",
+          "on_delay_s",
+          "consequence",
+          "action",
+          "max_response_min"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "HH",
+              "H",
+              "L",
+              "LL",
+              "DEV",
+              "ROC",
+              "BADPV"
+            ]
+          },
+          "setpoint": {
+            "type": "number"
+          },
+          "priority": {
+            "enum": [
+              1,
+              2,
+              3
+            ]
+          },
+          "deadband": {
+            "type": "number",
+            "minimum": 0
+          },
+          "on_delay_s": {
+            "type": "number",
+            "minimum": 0
+          },
+          "trip": {
+            "type": "boolean"
+          },
+          "consequence": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "max_response_min": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    }
+  }
+}

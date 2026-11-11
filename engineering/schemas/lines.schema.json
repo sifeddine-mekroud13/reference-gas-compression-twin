@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rgpf/lines.schema.json",
+  "title": "lines",
+  "type": "object",
+  "required": [
+    "lines",
+    "junctions",
+    "battery_limits"
+  ],
+  "properties": {
+    "junctions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "battery_limits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "service",
+          "from",
+          "to",
+          "dn",
+          "length_m"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^100-L-[0-9]{3}$"
+          },
+          "service": {
+            "enum": [
+              "PG",
+              "HC",
+              "FG",
+              "DR"
+            ]
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "dn": {
+            "type": "integer"
+          },
+          "length_m": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    }
+  }
+}

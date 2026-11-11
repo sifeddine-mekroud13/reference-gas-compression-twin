@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Generated engineering outputs (rebuilt from engineering/data)
+engineering/generated/*
+!engineering/generated/.gitkeep
+
+# Data and datasets (download with scripts/, never commit)
+data/
+datasets/
+*.parquet
+*.h5
+*.mat
+
+# Secrets and PKI material
+.env
+*.pem
+*.key
+*.crt
+*.der
+*.p12
+infra/pki/out/
+
+# Node / UI
+node_modules/
+ui/dist/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+analytics/benchmarks/data/
+analytics/benchmarks/datasets.lock
+analytics/results/*.tmp

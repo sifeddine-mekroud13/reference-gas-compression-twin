@@ -1,0 +1,5 @@
+# Export header pressure rises beyond what the compressor can deliver at max speed.
+seed: 2
+events:
+  - {t: 60, action: export_pressure, value_bara: 84}
+  - {t: 300, action: export_pressure, value_bara: 75}
